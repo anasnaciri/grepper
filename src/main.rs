@@ -1,3 +1,4 @@
+use grepper::search;
 use std::env;
 use std::error::Error;
 use std::fs;
@@ -11,9 +12,6 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Searching for {}", config.query);
-    println!("In file {}", config.file_path);
-
     if let Err(e) = run(config) {
         println!("Application Error: {e}");
         process::exit(1)
@@ -23,7 +21,9 @@ fn main() {
 fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
 
-    println!("with text:\n{contents}");
+    for line in search(&config.query, &contents) {
+        println!("a: {line}")
+    }
 
     Ok(())
 }
